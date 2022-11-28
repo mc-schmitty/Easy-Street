@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,28 +9,52 @@ public class DiceRollManager : MonoBehaviour
     [SerializeField]
     private DiceSimulation sim;
     [SerializeField]
-    private Rigidbody dice;
-    private FaceDetection fd;
-    private Vector3 diceStartingPos;
-    private Quaternion diceStartingRot;
+    private Rigidbody[] dice;
+    private int diceLength;
+    private FaceDetection[] fd;
+    private Vector3[] diceStartingPos;
+    private Quaternion[] diceStartingRot;
     [SerializeField]
     private Button[] rollButtons;
 
-    private int simmedRoll;
-    private int wantedRoll;
+    private int[] simmedRoll;
+    private int[] wantedRoll;
+    private int[] rolledResult;
     private bool canRoll;
+    private bool ffskip; // ignore first check
 
+    //test
+    Vector3[] randForces;
+    Vector3[] randTorques;
+    //test
     void Start()
     {
+        diceLength = dice.Length;
+        fd = new FaceDetection[diceLength];
+        diceStartingPos = new Vector3[diceLength];
+        diceStartingRot = new Quaternion[diceLength];
         //Debug.unityLogger.logEnabled = false;
-        fd = dice.GetComponent<FaceDetection>();
-        diceStartingPos = dice.position;
-        diceStartingRot = dice.rotation;
+        // test
+        randForces = new Vector3[diceLength];
+        randTorques = new Vector3[diceLength];
+        // test
+        for (int i = 0; i < diceLength; i++)
+        {
+            fd[i] = dice[i].GetComponent<FaceDetection>();
+            diceStartingPos[i] = dice[i].position;
+            diceStartingRot[i] = dice[i].rotation;
+            //test
+            randForces[i] = RandomForce();
+            randTorques[i] = RandomTorque();
+        }
 
+        simmedRoll = new int[diceLength];
+        rolledResult = new int[diceLength];
         canRoll = true;
+        ffskip = true;
     }
 
-    private void Update()
+    private void bUpdate()
     {
         if (canRoll)
         {
@@ -39,75 +64,111 @@ public class DiceRollManager : MonoBehaviour
 
     public void StartCRoll()
     {
-        StartCRoll(Random.Range(1, 7));  // Get random dice face
+        int[] temp = new int[diceLength];
+        for(int i = 0; i < diceLength; i++)
+        {
+            temp[i] = Random.Range(1, 7);
+        }
+        StartRoll(temp, true);
+    }
+
+    public void StartCRoll(int num)
+    {
+        int[] temp = new int[diceLength];
+        for (int i = 0; i < diceLength; i++)
+        {
+            temp[i] = num;
+        }
+        StartRoll(temp, true);
+    }
+
+    public void StartCRoll(int[] expectedRolls)
+    {
+        StartRoll(expectedRolls, true);
+    }
+
+    public void StartNRoll()
+    {
+        int[] temp = new int[diceLength];
+        for(int i = 0; i < diceLength; i++)
+        {
+            temp[i] = 7;
+        }
+        StartRoll(temp, false);
     }
 
     /// <summary>
     ///  Rolls a single dice with random force. Simulates roll and apples correction to turn roll result into expectedRoll.
     /// </summary>
-    /// <param name="expectedRoll"></param>
-    public void StartCRoll(int expectedRoll)
+    /// <param name="expectedRolls"></param> expected rolls oh wow this is outdated
+    /// <param name="correctionRoll"></param> whether rolls should be corrected or not
+    private void StartRoll(int[] expectedRolls, bool correctionRoll)
     {
-        wantedRoll = expectedRoll;
-        Debug.Log("Attempting to roll a " + expectedRoll);
+        wantedRoll = expectedRolls;
+        if(correctionRoll)
+            Debug.Log("Attempting to roll " + expectedRolls.ToCommaSeparatedString());
 
         // Get random roll forces
-        Vector3 randForce = RandomForce();
-        Vector3 randTorque = RandomTorque();
+        //Vector3[] randForces = new Vector3[diceLength];
+        //Vector3[] randTorques = new Vector3[diceLength];
+        bool[] rolling = new bool[diceLength];
 
-        // Reset dice transform (actually its rigidbody i hope that reflected in the transform otherwise we might have issues)
-        dice.position = diceStartingPos;
-        dice.rotation = diceStartingRot;
-        dice.velocity = Vector3.zero;
-        dice.angularVelocity = Vector3.zero;
-        fd.ResetFaces();
-
-        // Start simulation with random generated dice roll
-        DiceFace result = sim.SimulateRoll(diceStartingPos, diceStartingRot, randForce, randTorque);
-        simmedRoll = (int)result;
-        /* Testing */
-        //expectedRoll = simmedRoll;
-        //wantedRoll = simmedRoll;
-        /* Testing */
-        // Generate correction quaternion
-        Quaternion correctiveRotation = GenerateCorrectiveRotation(result, (DiceFace)expectedRoll);
-
-        Debug.Log("Simulation rolled a " + (int)result + " with Force: " + randForce.ToString("n2") + "; Torque: "
-            + randTorque.ToString("n2") + ".\nApplying corrective rotation: " + correctiveRotation.eulerAngles);
-
-        // Apply correction, then force
-        //dice.rotation *= correctiveRotation;
-        //dice.angularVelocity = Vector3.zero;
-        fd.RotateFaces(correctiveRotation);
-        dice.AddForce(randForce, ForceMode.Impulse);
-        dice.AddTorque(randTorque, ForceMode.Impulse);
-        canRoll = false;        // Now rolling, so cant roll until finished
-        foreach(Button b in rollButtons)
+        for(int i = 0; i < diceLength; i++)     // Setup dice pre-simulation
         {
-            b.interactable = false;
+            if (expectedRolls[i] > 0)
+            {
+                randForces[i] = RandomForce();
+                randTorques[i] = RandomTorque();
+
+                // Reset dice transform (actually its rigidbody i hope that reflected in the transform otherwise we might have issues)
+                dice[i].position = diceStartingPos[i];
+                dice[i].rotation = diceStartingRot[i];
+                dice[i].velocity = Vector3.zero;
+                dice[i].angularVelocity = Vector3.zero;
+                fd[i].ResetFaces();
+                rolling[i] = true;
+            }
+            else
+            {
+                rolling[i] = false;     // Determine which dice are going to be simulated or not
+            }
+            
         }
-    }
 
-    public void StartNRoll()
-    {
-        wantedRoll = 0;
-        simmedRoll = 0;
+        if (correctionRoll)     // Check if sim required, apply and post-sim results
+        {
+            // Start simulation with random generated dice roll
+            DiceFace[] result = sim.SimulateRoll(rolling, diceStartingPos, diceStartingRot, randForces, randTorques);
+            List<Vector3> qrs = new();
+            for (int i = 0; i < diceLength; i++)
+            {
+                if (rolling[i])
+                {
+                    simmedRoll[i] = (int)result[i];
+                    // Generate correction quaternion
+                    Quaternion correctiveRotation = GenerateCorrectiveRotation(result[i], (DiceFace)wantedRoll[i]);
+                    qrs.Add(correctiveRotation.eulerAngles);
+                    fd[i].RotateFaces(correctiveRotation);                  // Apply correction
+                    ApplyForce(dice[i], randForces[i], randTorques[i]);     // Apply force
+                }  
+            }
+            Debug.Log("Simulation rolled a " + simmedRoll.ToCommaSeparatedString() + " with Force: " + randForces.ToCommaSeparatedString() + "; Torque: "
+                + randTorques.ToCommaSeparatedString() + ".\nApplying corrective rotation: " + qrs.ToCommaSeparatedString());
+        }
+        else
+        {
+            for(int i = 0; i < diceLength; i++)     // Just apply the force
+            {
+                if (rolling[i])
+                {
+                    ApplyForce(dice[i], randForces[i], randTorques[i]);
+                }
+            }
+        }
 
-        // Get random roll forces
-        Vector3 randForce = RandomForce();
-        Vector3 randTorque = RandomTorque();
-
-        // Reset dice transform (actually its rigidbody i hope that reflected in the transform otherwise we might have issues)
-        dice.position = diceStartingPos;
-        dice.rotation = diceStartingRot;
-        dice.velocity = Vector3.zero;
-        dice.angularVelocity = Vector3.zero;
-
-        Debug.Log("Rolling dice with Force: " + randForce.ToString("n2") + " and Torque: " + randTorque.ToString("n2"));
-        dice.AddForce(randForce, ForceMode.Impulse);
-        dice.AddTorque(randTorque, ForceMode.Impulse);
         canRoll = false;        // Now rolling, so cant roll until finished
-        foreach (Button b in rollButtons)
+        ffskip = true;
+        foreach(Button b in rollButtons)
         {
             b.interactable = false;
         }
@@ -117,20 +178,35 @@ public class DiceRollManager : MonoBehaviour
     {
         if (!canRoll)
         {
-            if(dice.position != diceStartingPos && dice.velocity == Vector3.zero && dice.angularVelocity == Vector3.zero)       // Test if rolling has stopped
+            if (ffskip)
             {
-                int rolledResult = (int)(fd.CheckFace());
-                if(wantedRoll == 0)
+                ffskip = false;
+                /*for(int i=0; i < diceLength; i++)
                 {
-                    Debug.Log("Rolled a " + rolledResult + "!");
+                    if (dice[i].position == diceStartingPos[i])
+                        return;
+                }*/
+                return;
+            }
+
+            if(!sim.TestForVelocity(dice))       // Test if rolling has stopped
+            {
+                for(int i = 0; i < diceLength; i++)
+                {
+                    rolledResult[i] = (int)(fd[i].CheckFace());     // Check all new faces
                 }
-                else if(rolledResult == wantedRoll)
+
+                if (wantedRoll[0] == 7)
                 {
-                    Debug.Log("Successfully changed a " + simmedRoll + " roll to a " + rolledResult + " roll!");
+                    Debug.Log("Rolled " + rolledResult.ToCommaSeparatedString() + "!");
+                }
+                else if(rolledResult.ToCommaSeparatedString() == wantedRoll.ToCommaSeparatedString())
+                {
+                    Debug.Log("Successfully changed " + simmedRoll.ToCommaSeparatedString() + " roll to " + rolledResult.ToCommaSeparatedString() + " roll!");
                 }
                 else
                 {
-                    Debug.LogError("Roll correction failed. Expected " + wantedRoll + " but rolled " + rolledResult);
+                    Debug.LogError("Roll correction failed. Expected " + wantedRoll.ToCommaSeparatedString() + " but rolled " + rolledResult.ToCommaSeparatedString());
                 }
                 canRoll = true;
                 foreach (Button b in rollButtons)
@@ -144,7 +220,7 @@ public class DiceRollManager : MonoBehaviour
     private Vector3 RandomForce()
     {
         // Generate random vector in any direction, with added force multiplier
-        return new Vector3(Random.Range(-1.6f, -2f), Random.Range(0f, 0.5f), Random.Range(-0.8f, 0.8f));
+        return new Vector3(Random.Range(-1.6f, -2f), Random.Range(0f, 0.5f), Random.Range(-0.01f, 0.01f));
     }
 
     private Vector3 RandomTorque()
@@ -157,6 +233,12 @@ public class DiceRollManager : MonoBehaviour
     private Quaternion GenerateCorrectiveRotation(DiceFace currentEndingFace, DiceFace intendedEndingFace)
     {
         return Quaternion.FromToRotation(FaceToVector(intendedEndingFace), FaceToVector(currentEndingFace));
+    }
+
+    private void ApplyForce(Rigidbody rb, Vector3 force, Vector3 torque)
+    {
+        rb.AddForce(force, ForceMode.Impulse);
+        rb.AddTorque(torque, ForceMode.Impulse);
     }
 
     // I think I'm gonna make a static class for this conversion function eventially (maybe face detection too), but moving it here for now (again)

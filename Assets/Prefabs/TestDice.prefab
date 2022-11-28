@@ -1767,6 +1767,7 @@ GameObject:
   - component: {fileID: 8769281965459001284}
   - component: {fileID: 8769281965459001295}
   - component: {fileID: 8769281965459001294}
+  - component: {fileID: 7023551130727048410}
   m_Layer: 0
   m_Name: TestDice
   m_TagString: Untagged
@@ -1897,6 +1898,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   childTransform: {fileID: 8769281965570081512}
+--- !u!114 &7023551130727048410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8769281965459001285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59e14b0ac0f1d3542bdb07f1345da278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linkedGlowers: []
 --- !u!1 &8769281965570081513
 GameObject:
   m_ObjectHideFlags: 0
