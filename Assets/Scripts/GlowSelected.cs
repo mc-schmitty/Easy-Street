@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GlowSelected : MonoBehaviour
 {
+    public Action<GlowSelected, GlowSelected[]> OnMouseSelect { get; set; }
+
     private Renderer rend;
     private Color originalColor; // OC
     [SerializeField]
@@ -31,6 +34,11 @@ public class GlowSelected : MonoBehaviour
         {
             gs.StopGlow();
         }
+    }
+
+    private void OnMouseDown()
+    {
+        OnMouseSelect?.Invoke(this, linkedGlowers.ToArray());
     }
 
     public void StartGlow()
