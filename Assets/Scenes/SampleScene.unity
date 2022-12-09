@@ -499,6 +499,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8769281965459001284, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8769281965459001285, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
       propertyPath: m_Name
       value: TestDice (2)
@@ -874,8 +878,10 @@ Transform:
   - {fileID: 176955058}
   - {fileID: 1930221617}
   - {fileID: 732984629}
+  - {fileID: 298042429}
+  - {fileID: 1114725946}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &264221824
 MonoBehaviour:
@@ -918,6 +924,8 @@ MonoBehaviour:
   - {fileID: 176955057}
   - {fileID: 1930221616}
   - {fileID: 732984628}
+  - {fileID: 298042428}
+  - {fileID: 1114725945}
   dice:
   - {fileID: 2102901724}
   - {fileID: 501053078}
@@ -927,6 +935,51 @@ MonoBehaviour:
   - {fileID: 1463729110}
   diceRbTest: {fileID: 2102901719}
   travelTime: 2
+--- !u!1 &298042427
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 298042429}
+  - component: {fileID: 298042428}
+  m_Layer: 0
+  m_Name: Shelf5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &298042428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 298042427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 374807aea0623b544a259c2938f38feb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  savePoint: {x: 0, y: 0, z: 0}
+--- !u!4 &298042429
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 298042427}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 264221823}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &325494293 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8769281965459001285, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
@@ -1034,7 +1087,7 @@ RectTransform:
   - {fileID: 599234041}
   - {fileID: 1769933039}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1614,7 +1667,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &501053073
 PrefabInstance:
@@ -1718,6 +1771,10 @@ PrefabInstance:
     - target: {fileID: 8769281965414423706, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8769281965459001284, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8769281965459001285, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
       propertyPath: m_Name
@@ -1913,6 +1970,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8769281965459001284, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8769281965459001285, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
       propertyPath: m_Name
       value: TestDice (3)
@@ -2072,10 +2133,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 264221824}
-        m_TargetAssemblyTypeName: SelectDiceManager, Assembly-CSharp
-        m_MethodName: MoveTest
-        m_Mode: 1
+      - m_Target: {fileID: 1015835132}
+        m_TargetAssemblyTypeName: DiceRollManager, Assembly-CSharp
+        m_MethodName: StartCRoll
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2349,7 +2410,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &732984627
 GameObject:
@@ -2596,7 +2657,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
@@ -2650,7 +2711,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -2680,7 +2741,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 90}
 --- !u!1 &1015835131
 GameObject:
@@ -2778,7 +2839,52 @@ Transform:
   - {fileID: 2030345349}
   - {fileID: 1245316425}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1114725944
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1114725946}
+  - component: {fileID: 1114725945}
+  m_Layer: 0
+  m_Name: Shelf6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1114725945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1114725944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 374807aea0623b544a259c2938f38feb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  savePoint: {x: 0, y: 0, z: 0}
+--- !u!4 &1114725946
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1114725944}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.1, y: 1, z: 0.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 264221823}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1245316424
 PrefabInstance:
@@ -2787,6 +2893,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1088436499}
     m_Modifications:
+    - target: {fileID: 8769281965459001284, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8769281965459001285, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
       propertyPath: m_Name
       value: TestDice (5)
@@ -3585,6 +3695,51 @@ Transform:
   m_Father: {fileID: 264221823}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1937601064
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1937601066}
+  - component: {fileID: 1937601065}
+  m_Layer: 0
+  m_Name: LineManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1937601065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937601064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716970679ed4dc74aa1d0c4a5e3923ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  linePrefab: {fileID: 9000122134241009451, guid: 2362b40ff7717784aa513ce27b74eb93, type: 3}
+--- !u!4 &1937601066
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937601064}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1977328701
 GameObject:
   m_ObjectHideFlags: 0
@@ -3748,6 +3903,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1088436499}
     m_Modifications:
+    - target: {fileID: 8769281965459001284, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8769281965459001285, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
       propertyPath: m_Name
       value: TestDice (4)
@@ -4130,6 +4289,10 @@ PrefabInstance:
     - target: {fileID: 8769281965414423706, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8769281965459001284, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
+      propertyPath: m_Interpolate
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8769281965459001285, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
       propertyPath: m_Name

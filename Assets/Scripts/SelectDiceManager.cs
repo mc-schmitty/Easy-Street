@@ -56,12 +56,12 @@ public class SelectDiceManager : MonoBehaviour
             int e = GetNextEmpty();
             if(e >= 0)      // Check shouldn't be necessary because we have exactly 6 dice and 6 holders, so there should always be space if rb isnt already inside
             {
-                diceHolders[e].Insert(rb, travelTime + (float)e*0.2f);  // Extra travel time is to add slight variation
+                diceHolders[e].Insert(rb, travelTime - (float)e*0.2f);  // Extra travel time is to add slight variation
             }
         }
         else
         {
-            diceHolders[index].Remove(travelTime + (float)index * 0.2f);
+            diceHolders[index].Remove(travelTime - (float)index * 0.2f);
         }
         // pseudo-recurse for each other linked dice
         if(linkedList != null)

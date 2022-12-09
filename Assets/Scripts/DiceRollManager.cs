@@ -117,7 +117,7 @@ public class DiceRollManager : MonoBehaviour
         {
             if (expectedRolls[i] > 0)
             {
-                randForces[i] = RandomForce();
+                randForces[i] = RandomForce(i);
                 randTorques[i] = RandomTorque();
 
                 // Reset dice transform (actually its rigidbody i hope that reflected in the transform otherwise we might have issues)
@@ -138,18 +138,20 @@ public class DiceRollManager : MonoBehaviour
         if (correctionRoll)     // Check if sim required, apply and post-sim results
         {
             // Start simulation with random generated dice roll
-            DiceFace[] result = sim.SimulateRoll(rolling, diceStartingPos, diceStartingRot, randForces, randTorques);
+            var result = sim.SimulateRoll(rolling, diceStartingPos, diceStartingRot, randForces, randTorques);
             List<Vector3> qrs = new();
             for (int i = 0; i < diceLength; i++)
             {
                 if (rolling[i])
                 {
-                    simmedRoll[i] = (int)result[i];
+                    simmedRoll[i] = (int)result.faces[i];
                     // Generate correction quaternion
-                    Quaternion correctiveRotation = GenerateCorrectiveRotation(result[i], (DiceFace)wantedRoll[i]);
+                    Quaternion correctiveRotation = GenerateCorrectiveRotation(result.faces[i], (DiceFace)wantedRoll[i]);
                     qrs.Add(correctiveRotation.eulerAngles);
                     fd[i].RotateFaces(correctiveRotation);                  // Apply correction
-                    ApplyForce(dice[i], randForces[i], randTorques[i]);     // Apply force
+                    StartCoroutine(RollDiceRecording(dice[i], result.recording[i]));
+                    
+                    //ApplyForce(dice[i], randForces[i], randTorques[i]);     // Apply force
                 }  
             }
             Debug.Log("Simulation rolled a " + simmedRoll.ToCommaSeparatedString() + " with Force: " + randForces.ToCommaSeparatedString() + "; Torque: "
@@ -176,6 +178,7 @@ public class DiceRollManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        
         if (!canRoll)
         {
             if (ffskip)
@@ -217,10 +220,34 @@ public class DiceRollManager : MonoBehaviour
         }
     }
 
+    // Rolls dice based on queued results
+    private IEnumerator RollDiceRecording(Rigidbody diceRB, Queue<(Vector3, Quaternion)> physicsRecording)
+    {
+        diceRB.isKinematic = true;
+        diceRB.detectCollisions = false;
+
+        (Vector3 newPos, Quaternion newRot) newStep;
+        while (physicsRecording.TryDequeue(out newStep))
+        {
+            diceRB.MovePosition(newStep.newPos);
+            diceRB.MoveRotation(newStep.newRot);
+            yield return new WaitForFixedUpdate();
+        }
+
+        diceRB.detectCollisions = true;
+        diceRB.isKinematic = false;
+    }
+
     private Vector3 RandomForce()
     {
         // Generate random vector in any direction, with added force multiplier
-        return new Vector3(Random.Range(-1.6f, -2f), Random.Range(0f, 0.5f), Random.Range(-0.01f, 0.01f));
+        return new Vector3(Random.Range(-1.6f, -2f), Random.Range(0f, 0.5f), Random.Range(-0.3f, 0.3f));
+    }
+
+    private Vector3 RandomForce(int index)
+    {
+        float zMod = (index - 2.5f)/4;
+        return new Vector3(Random.Range(-1.6f, -2f), Random.Range(0f, 0.5f), Random.Range(-0.3f, 0.3f)-zMod);
     }
 
     private Vector3 RandomTorque()

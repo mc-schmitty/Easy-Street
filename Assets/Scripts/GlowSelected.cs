@@ -21,19 +21,26 @@ public class GlowSelected : MonoBehaviour
     private void OnMouseEnter()
     {
         StartGlow();
+        Transform[] tList = new Transform[linkedGlowers.Count + 1];      // Create list of transforms
+        tList[0] = transform;
+        int i = 1;
         foreach (GlowSelected gs in linkedGlowers)
         {
             gs.StartGlow();
+            tList[i] = gs.transform;         // Add transforms to list
+            i++;
         }
+        LineRendererManager.Manager.CommissionLine(this.GetInstanceID(), tList, 0);     // please give line
     }
 
     private void OnMouseExit()
     {
         StopGlow();
-        foreach(GlowSelected gs in linkedGlowers)
+        foreach (GlowSelected gs in linkedGlowers)
         {
             gs.StopGlow();
         }
+        LineRendererManager.Manager.DecomissionLine(this.GetInstanceID());          // get this line outta here
     }
 
     private void OnMouseDown()
