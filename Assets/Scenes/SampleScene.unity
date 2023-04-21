@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 13424272}
   - component: {fileID: 13424271}
   m_Layer: 5
-  m_Name: Button
+  m_Name: CorrectedRollButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -207,9 +207,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1015835132}
-        m_TargetAssemblyTypeName: DiceRollManager, Assembly-CSharp
-        m_MethodName: StartCRoll
+      - m_Target: {fileID: 1015835134}
+        m_TargetAssemblyTypeName: DiceGame, Assembly-CSharp
+        m_MethodName: GameRound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -559,6 +559,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8769281965459001291, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1220ab64c796ce040b61a995acc8c8e3, type: 2}
     - target: {fileID: 8769281965570081513, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -1597,7 +1601,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 489269576}
-  m_Material: {fileID: 13400000, guid: 8ef9e70cd9fee564ba91a1dbc0890bef, type: 2}
+  m_Material: {fileID: 13400000, guid: d91ce231f6f0330479f1b71aa59df4a4, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -1832,6 +1836,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8769281965459001291, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1220ab64c796ce040b61a995acc8c8e3, type: 2}
     - target: {fileID: 8769281965570081513, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -2030,6 +2038,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8769281965459001291, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1220ab64c796ce040b61a995acc8c8e3, type: 2}
     - target: {fileID: 8769281965570081513, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -2753,6 +2765,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1015835133}
   - component: {fileID: 1015835132}
+  - component: {fileID: 1015835134}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -2804,6 +2817,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1015835134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1015835131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23ccca9d09429594fa56d3a5a0de1902, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  points: 0
 --- !u!1 &1088436498
 GameObject:
   m_ObjectHideFlags: 0
@@ -2949,6 +2975,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8769281965459001291, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1220ab64c796ce040b61a995acc8c8e3, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
 --- !u!4 &1245316425 stripped
@@ -3959,6 +3989,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8769281965459001291, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1220ab64c796ce040b61a995acc8c8e3, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
 --- !u!4 &2030345349 stripped
@@ -4346,6 +4380,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8769281965459001291, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 1220ab64c796ce040b61a995acc8c8e3, type: 2}
     - target: {fileID: 8769281965570081513, guid: 260336341b9b0f6459903f0f60bec89c, type: 3}
       propertyPath: m_Layer
       value: 0

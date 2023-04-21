@@ -16,6 +16,7 @@ public class FaceDetection : MonoBehaviour
 {
     // Child transform that carries the actal dice numbers
     [SerializeField] private Transform childTransform;
+    public bool debugMode;
 
     // Rotates the numbers to any desired location
     public void RotateFaces(Quaternion rotation)
@@ -34,19 +35,29 @@ public class FaceDetection : MonoBehaviour
     public DiceFace CheckFace()
     {
         // Get facings for all 
-        int up = Mathf.RoundToInt(Vector3.Dot(childTransform.up, Vector3.up));
-        int fwd = Mathf.RoundToInt(Vector3.Dot(childTransform.forward, Vector3.up));
-        int right = Mathf.RoundToInt(Vector3.Dot(childTransform.right, Vector3.up));
+        float upF = Vector3.Dot(childTransform.up, Vector3.up);
+        float fwdF = Vector3.Dot(childTransform.forward, Vector3.up);
+        float rightF = Vector3.Dot(childTransform.right, Vector3.up);
+        // Convert to int
+        int up = Mathf.RoundToInt(upF);
+        int fwd = Mathf.RoundToInt(fwdF);
+        int right = Mathf.RoundToInt(rightF);
+
+        // Debug
+        if (debugMode)
+        {
+            Debug.Log(gameObject.GetInstanceID() + "> up: " + upF + ", fwd: " + fwdF + ", right: " + rightF);
+        }
         
-        //Nasty looking ifs     (ok coming back they arent too bad)
-        if(up != 0)
+        //Nasty looking ifs     (could definitely reduce some of the mathf calls but whatever if it works)
+        if(up != 0 && Mathf.Abs(upF) > Mathf.Abs(fwdF) && Mathf.Abs(upF) > Mathf.Abs(rightF))
         {
             if (up == 1)
                 return DiceFace.Up;
             else
                 return DiceFace.Down;
         }
-        else if(fwd != 0)
+        else if(fwd != 0 && Mathf.Abs(fwdF) > Mathf.Abs(upF) && Mathf.Abs(fwdF) > Mathf.Abs(rightF))
         {
             if (fwd == 1)
                 return DiceFace.Forward;
@@ -60,5 +71,12 @@ public class FaceDetection : MonoBehaviour
             else
                 return DiceFace.Left;
         }
+    }
+
+
+    private void Update()
+    {
+        if(debugMode)
+            Debug.Log(gameObject.GetInstanceID() + "> result: " + ((int)CheckFace()));
     }
 }
