@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,7 +28,7 @@ public class DiceRollManager : MonoBehaviour
     Vector3[] randForces;
     Vector3[] randTorques;
     //test
-    void Start()
+    private void Awake()
     {
         diceLength = dice.Length;
         fd = new FaceDetection[diceLength];
@@ -37,7 +38,17 @@ public class DiceRollManager : MonoBehaviour
         // test
         randForces = new Vector3[diceLength];
         randTorques = new Vector3[diceLength];
-        // test
+
+        // Initialize stuff very epic comment
+        simmedRoll = new int[diceLength];
+        rolledResult = new int[diceLength];
+        canRoll = true;
+        ffskip = true;
+    }
+
+    void Start()
+    {
+        // sets up dice faces
         for (int i = 0; i < diceLength; i++)
         {
             fd[i] = dice[i].GetComponent<FaceDetection>();
@@ -48,13 +59,9 @@ public class DiceRollManager : MonoBehaviour
             randTorques[i] = RandomTorque();
         }
 
-        simmedRoll = new int[diceLength];
-        rolledResult = new int[diceLength];
-        canRoll = true;
-        ffskip = true;
     }
 
-    private void bUpdate()
+    private void bUpdate()  // Sketchy debug function, remove 'b' to try to roll every frame
     {
         if (canRoll)
         {
@@ -62,6 +69,24 @@ public class DiceRollManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Provide list of dice.
+    /// </summary>
+    /// <returns></returns>
+    public GameObject[] GetDice()       //but actually everything having a reference to the dice on Awake might be better.
+    {
+        GameObject[] dl = new GameObject[diceLength];
+        for (int i = 0; i < diceLength; i++)
+        {
+            dl[i] = dice[i].gameObject;
+        }
+
+        return dl;
+    }
+
+    /// <summary>
+    /// Start a corrected roll with all 6 dice.
+    /// </summary>
     public void StartCRoll()
     {
         int[] temp = new int[diceLength];
@@ -72,6 +97,10 @@ public class DiceRollManager : MonoBehaviour
         StartRoll(temp, true);
     }
 
+    /// <summary>
+    /// Start a corrected roll with all 6 dice that rolls 'num' result.
+    /// </summary>
+    /// <param name="num">The number all 6 dice will roll.</param>
     public void StartCRoll(int num)
     {
         int[] temp = new int[diceLength];
@@ -82,11 +111,18 @@ public class DiceRollManager : MonoBehaviour
         StartRoll(temp, true);
     }
 
+    /// <summary>
+    /// Start a corrected roll that matches the provided int array.
+    /// </summary>
+    /// <param name="expectedRolls">Array containing expected rolls. Must be size 6. Values of 0 will not roll a die.</param>
     public void StartCRoll(int[] expectedRolls)
     {
         StartRoll(expectedRolls, true);
     }
 
+    /// <summary>
+    /// Start an uncorrected roll with all 6 dice.
+    /// </summary>
     public void StartNRoll()
     {
         int[] temp = new int[diceLength];
@@ -199,11 +235,12 @@ public class DiceRollManager : MonoBehaviour
                     rolledResult[i] = (int)(fd[i].CheckFace());     // Check all new faces
                 }
 
+                Regex rx = new Regex(wantedRoll.ToCommaSeparatedString().Replace('0', '.'));    // Need to ignore occurences of 0 in results, as 0s could be anything
                 if (wantedRoll[0] == 7)
                 {
                     Debug.Log("Rolled " + rolledResult.ToCommaSeparatedString() + "!");
                 }
-                else if(rolledResult.ToCommaSeparatedString() == wantedRoll.ToCommaSeparatedString())
+                else if(rx.IsMatch(rolledResult.ToCommaSeparatedString()))
                 {
                     Debug.Log("Successfully changed " + simmedRoll.ToCommaSeparatedString() + " roll to " + rolledResult.ToCommaSeparatedString() + " roll!");
                 }

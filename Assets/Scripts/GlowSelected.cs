@@ -12,14 +12,22 @@ public class GlowSelected : MonoBehaviour
     [SerializeField]
     private List<GlowSelected> linkedGlowers;
 
-    void Start()
+    void Awake()
     {
         rend = GetComponent<Renderer>();
         originalColor = rend.material.color;
     }
 
+    private void OnDisable()
+    {
+        OnMouseExit();  // In the case this gets disabled while the mouse is still on it, 
+    }
+
     private void OnMouseEnter()
     {
+        if (!enabled)   // Don't glow if disabled
+            return;
+
         StartGlow();
         Transform[] tList = new Transform[linkedGlowers.Count + 1];      // Create list of transforms
         tList[0] = transform;
@@ -35,6 +43,9 @@ public class GlowSelected : MonoBehaviour
 
     private void OnMouseExit()
     {
+        if (!enabled)   // Don't glow if disabled
+            return;
+
         StopGlow();
         foreach (GlowSelected gs in linkedGlowers)
         {
@@ -45,7 +56,11 @@ public class GlowSelected : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (!enabled)   // Don't glow if disabled
+            return;
+
         OnMouseSelect?.Invoke(this, linkedGlowers.ToArray());
+        //Debug.Log(OnMouseSelect.GetInvocationList().Length);
     }
 
     public void StartGlow()

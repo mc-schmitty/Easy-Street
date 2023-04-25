@@ -6,6 +6,7 @@ using UnityEngine;
 public class SelectDiceManager : MonoBehaviour
 {
     public Action<GlowSelected, GlowSelected[]> onMouseSelect;      // Gets clicks
+    public static SelectDiceManager Manager;
 
     [SerializeField]
     private AnimationCurve curve;
@@ -18,11 +19,23 @@ public class SelectDiceManager : MonoBehaviour
 
     private void Awake()
     {
+        if (Manager == null)
+        {
+            Manager = this;
+        }
+        else
+        {
+            this.enabled = false;
+            return;
+        }
+
         onMouseSelect += MoveDice;
     }
 
     void Start()
     {
+        onMouseSelect += FindObjectOfType<DiceGame>().DiceWasSelected;      // forcibly find the dicegame so we can shove its function into this delegate. idk why it doesnt work the other way round, and this is horrendous (but it works for now)
+
         foreach(SelectDiceComponent sdc in diceHolders)
         {
             sdc.SetCurve = curve;
@@ -49,6 +62,12 @@ public class SelectDiceManager : MonoBehaviour
 
     public void MoveDice(GlowSelected obj, GlowSelected[] linkedList)
     {
+        /*Debug.Log(onMouseSelect.GetInvocationList().Length);
+        foreach (Delegate d in onMouseSelect.GetInvocationList())
+        {
+            Debug.Log(d.Method.Name);
+        }*/
+
         Rigidbody rb = obj.GetComponent<Rigidbody>();
         int index = Find(rb);
         if(index < 0)   // If rigidbody not contained in components
@@ -70,6 +89,14 @@ public class SelectDiceManager : MonoBehaviour
             {
                 MoveDice(linkedGS, null);
             }
+        }
+    }
+
+    public void FreeAllDiceHolders()
+    {
+        foreach(SelectDiceComponent sdci in diceHolders)
+        {
+            sdci.Clear();
         }
     }
 

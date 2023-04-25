@@ -21,13 +21,13 @@ public class LineRendererManager : MonoBehaviour
         {
             this.enabled = false;
         }
+
+        availableLines = new Stack<LineRendererLink>();
+        assignedLines = new Dictionary<int, LineRendererLink>();
     }
 
     private void Start()
     {
-        availableLines = new Stack<LineRendererLink>();
-        assignedLines = new Dictionary<int, LineRendererLink>();
-
         LineRendererLink init = Instantiate(linePrefab.gameObject).GetComponent<LineRendererLink>();
         
         availableLines.Push(init);
