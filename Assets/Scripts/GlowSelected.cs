@@ -18,9 +18,15 @@ public class GlowSelected : MonoBehaviour
         originalColor = rend.material.color;
     }
 
+    private void OnEnable()
+    {
+        StopDull();
+    }
+
     private void OnDisable()
     {
         OnMouseExit();  // In the case this gets disabled while the mouse is still on it, 
+        StartDull();
     }
 
     private void OnMouseEnter()
@@ -69,6 +75,16 @@ public class GlowSelected : MonoBehaviour
     }
 
     public void StopGlow()
+    {
+        rend.material.color = originalColor;
+    }
+
+    public void StartDull()
+    {
+        rend.material.color = Color.gray;
+    }
+
+    public void StopDull()
     {
         rend.material.color = originalColor;
     }

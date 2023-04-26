@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.iOS;
 
 /*
 struct Dice     // Yeah I know the singular of "dice" is "die" but die kinda references other things ok?
@@ -57,6 +58,8 @@ public class DiceGame : MonoBehaviour
     private List<Dice> heldDice;
     private Dictionary<int, int> diceToDiceMap;    // Get our other dice from object dice, GameObject id key, Dice index value
     private bool isWaitingForUser;
+    private bool doDebugRoll;
+    private int[] debugRoll;
 
     private DiceRollManager drm;
     // UI Elements and Canvas stuff
@@ -75,6 +78,8 @@ public class DiceGame : MonoBehaviour
         heldDice = new List<Dice>();
         diceToDiceMap = new Dictionary<int, int>();    // GameObject id key, Dice index value
         isWaitingForUser = false;
+
+        doDebugRoll = false;                       // Concerning setting rolls for debug
 
         drm = GetComponent<DiceRollManager>();      // temp, ill prob do smth with static stuff eventually
 
@@ -100,6 +105,27 @@ public class DiceGame : MonoBehaviour
             //_ = d.Roll;
             d.Roll();
         }
+    }
+
+    public void DebugRoll()
+    {
+        List<int> list = new List<int>(debugRoll);
+        foreach(Dice d in activeDice)
+        {
+            d.result = list[0];
+            list.RemoveAt(0);
+        }
+    }
+
+    public void SetDebugRoll(int[] numbers)
+    {
+        doDebugRoll = true;
+        debugRoll = numbers;
+    }
+
+    public void UnsetDebugRoll()
+    {
+        doDebugRoll = false;
     }
 
     public (int,int) DetermineActiveScore()
@@ -170,7 +196,10 @@ public class DiceGame : MonoBehaviour
         infoText.ClearText(0);
 
         // 1. Roll active dice
-        Roll();
+        if (doDebugRoll)
+            DebugRoll();
+        else
+            Roll();
         PrintRoll();
         int[] temp = new int[6];
         for(int i = 0; i < 6; i++)
@@ -374,37 +403,29 @@ public class DiceGame : MonoBehaviour
     }
 
     /// <summary>
-    /// Straight defined by sequence 1, 2, 3, 4, 5, 6. Will always sum up to 21 (and no other combination of 6 does)
+    /// Straight defined by sequence 1, 2, 3, 4, 5, 6. 
     /// </summary>
     /// <returns></returns>
     private bool IsStraight()
     {
-        if (activeDice.Count == 6)
+        bool heldCount = heldDice.Count == 6;
+        if (activeDice.Count == 6 || heldCount)
         {
-            int sum = 0;
-            foreach (Dice d in activeDice)
+            int[] str = { 0, 0, 0, 0, 0, 0 };
+            foreach (Dice d in diceList)
             {
-                sum += d.result;
+                // Kind of an annoying test case: since held dice persist, need to check if each die is interactable (so actual straight and not built over multiple rolls)
+                if (heldCount && !d.diceObj.GetComponent<GlowSelected>().enabled)     
+                    return false;
+                if (str[d.result - 1] > 0)      // if duplicate dice exists
+                    return false;
+                str[d.result - 1]++;
+
             }
-
-            return sum == 21;
-        }
-        else if(heldDice.Count == 6)    // ok this is not the best solution, kinda forgor we need to check the held dice sometimes too
-        {
-            int sum = 0;
-            foreach (Dice d in heldDice)
-            {
-                sum += d.result;
-            }
-
-            return sum == 21;       // but it should work i cant find issues with it rn beyond it not being scaleable 
-        }
-        else
-        {
-            return false;
+            return true;        // Passes all test cases, so straight
         }
 
-        
+        return false;       // all 6 dice must be in same list
     }
 
     /// <summary>
