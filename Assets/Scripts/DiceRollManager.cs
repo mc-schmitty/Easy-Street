@@ -1,12 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class DiceRollManager : MonoBehaviour
 {
+    public static event Action<Rigidbody> OnDiceRollFinished; 
+
     [SerializeField]
     private DiceSimulation sim;
     [SerializeField]
@@ -82,6 +86,17 @@ public class DiceRollManager : MonoBehaviour
         }
 
         return dl;
+    }
+
+    // Not actually useful, just resets dice to their original position (and literally nothing else), used to clear dice off the screen
+    public void ResetAllDicePosition()
+    {
+        if (!canRoll)       // Don't do anything if in process of rolling
+            return;
+        for(int i=0; i < diceLength; i++)
+        {
+            dice[i].position = diceStartingPos[i];
+        }
     }
 
     /// <summary>
@@ -273,6 +288,7 @@ public class DiceRollManager : MonoBehaviour
 
         diceRB.detectCollisions = true;
         diceRB.isKinematic = false;
+        OnDiceRollFinished?.Invoke(diceRB);
     }
 
     private Vector3 RandomForce()

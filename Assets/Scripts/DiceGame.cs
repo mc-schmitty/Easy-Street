@@ -38,6 +38,7 @@ public class DiceGame : MonoBehaviour
 {
     public int totalPoints;
     public int heldPoints;
+    public int round;
 
     public const int OneScore = 100;        // Score for individual ones
     public const int FiveScore = 50;        // Score for individual fives
@@ -73,6 +74,7 @@ public class DiceGame : MonoBehaviour
         // init values and containters
         totalPoints = 0;
         heldPoints = 0;
+        round = 1;
         diceList = new Dice[6];
         activeDice = new List<Dice>();
         heldDice = new List<Dice>();
@@ -96,6 +98,8 @@ public class DiceGame : MonoBehaviour
         //onMouseSelect = SelectDiceManager.Manager.onMouseSelect;
         //onMouseSelect += this.DiceWasSelected;         // Now we also are listening for dice click events
         //Debug.Log(onMouseSelect.GetInvocationList().Length);
+
+        DiceRollManager.OnDiceRollFinished += diceRB => diceRB.GetComponent<GlowSelected>().UpdateDull();       // Whenever a dice is finished rolling, update dull (maybe move this to GlowSelected)
     }
 
     public void Roll()
@@ -174,7 +178,9 @@ public class DiceGame : MonoBehaviour
             {
                 foreach (Dice d in heldDice)
                 {
-                    d.diceObj.GetComponent<GlowSelected>().enabled = false;
+                    GlowSelected gs = d.diceObj.GetComponent<GlowSelected>();
+                    gs.enabled = false;
+                    gs.UpdateDull();
                 }
             }
             // Make all active dice selectable (might want to move this into DiceRollManager later
@@ -250,11 +256,13 @@ public class DiceGame : MonoBehaviour
             var gs = d.diceObj.GetComponent<GlowSelected>();
             gs.UnlinkAll();
             gs.enabled = false;
+            //gs.StopDull();         
         }
 
         SelectDiceManager.Manager.FreeAllDiceHolders();     // Empty the holder
+        //drm.ResetAllDicePosition();                         // Remove dice from screen
         bankButton.ResetScore();                            // Enable buttons
-        
+        round++;                                            // increment round counter
     }
 
     // User is clicking dice, add or remove from list

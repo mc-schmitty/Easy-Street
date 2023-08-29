@@ -9,8 +9,10 @@ public class GlowSelected : MonoBehaviour
 
     private Renderer rend;
     private Color originalColor; // OC
+    private Color dullColor = new(0.3f, 0.3f, 0.3f, 1);     // No point making this editable since its local to each glower
     [SerializeField]
     private List<GlowSelected> linkedGlowers;
+    private bool dullFlag = false;      // Whether the dice should be dull or not
 
     void Awake()
     {
@@ -26,7 +28,7 @@ public class GlowSelected : MonoBehaviour
     private void OnDisable()
     {
         OnMouseExit();  // In the case this gets disabled while the mouse is still on it, 
-        StartDull();
+        SetDull(true);  // Want rolling to be finished before dulling, so don't immediately update (note currently update is galled in dicegame, but could be moved to here)
     }
 
     private void OnMouseEnter()
@@ -81,12 +83,29 @@ public class GlowSelected : MonoBehaviour
 
     public void StartDull()
     {
-        rend.material.color = Color.gray;
+        rend.material.color = dullColor;
+        dullFlag = true;
     }
 
     public void StopDull()
     {
         rend.material.color = originalColor;
+        dullFlag = false;
+    }
+
+    // Sets the flag so dice dulling can be called later
+    public void SetDull(bool set)
+    {
+        dullFlag = set;
+    }
+
+    // Updates dice dulling to result of dull flag
+    public void UpdateDull()
+    {
+        if (dullFlag)
+            StartDull();
+        else
+            StopDull();
     }
 
     public bool LinkGlower(GlowSelected gs)
