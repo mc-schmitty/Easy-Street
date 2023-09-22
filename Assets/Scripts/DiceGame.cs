@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.iOS;
 
 /*
 struct Dice     // Yeah I know the singular of "dice" is "die" but die kinda references other things ok?
@@ -272,7 +271,7 @@ public class DiceGame : MonoBehaviour
             return;
 
         Dice mainDie = diceList[diceToDiceMap[obj.gameObject.GetInstanceID()]];
-        Debug.Log("Dice value should be: " + mainDie.result);
+        //Debug.Log("Dice value should be: " + mainDie.result);
         // Find if dice in active dice and move to held, or vice reversa
         if (activeDice.Contains(mainDie))
         {

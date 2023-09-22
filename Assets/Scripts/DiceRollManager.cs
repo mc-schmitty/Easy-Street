@@ -91,8 +91,11 @@ public class DiceRollManager : MonoBehaviour
     // Not actually useful, just resets dice to their original position (and literally nothing else), used to clear dice off the screen
     public void ResetAllDicePosition()
     {
-        if (!canRoll)       // Don't do anything if in process of rolling
+        /*if (!canRoll)
+        {       // Don't do anything if in process of rolling
+            Debug.Log("cant roll");
             return;
+        }*/
         for(int i=0; i < diceLength; i++)
         {
             dice[i].position = diceStartingPos[i];

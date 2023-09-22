@@ -20,11 +20,22 @@ public class DebugConsole : MonoBehaviour
     /// <param name="roll"></param>
     public void DebugRoll(string roll)
     {
-        if (roll.Length != 6)
+        if (roll.Length == 0)
         {
             input.text = "";
             dg.UnsetDebugRoll();
             return;
+        }
+
+        if(roll.Length < 6)
+        {
+            int remainder = 6 - roll.Length;        // Fill in any empty space with 1s
+            while(remainder > 0)
+            {
+                roll += "1";
+                remainder--;
+            }
+            input.text = roll;
         }
 
         int[] debugRoll = new int[6];
